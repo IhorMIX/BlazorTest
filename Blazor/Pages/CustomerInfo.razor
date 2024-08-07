@@ -1,0 +1,120 @@
+﻿@page "/customer"
+@using Blazor.Data
+@inject ICustomerService customerService
+@inject MudBlazor.ISnackbar snackBar
+
+<MudCard Elevation="10">
+    <MudGrid>
+        <MudItem xs="4">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">
+                        Add / Edit
+                    </MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField @bind-Value="customer.FirstName" Label="First Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
+                <MudTextField @bind-Value="customer.LastName" Label="Last Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
+                <MudTextField @bind-Value="customer.Phone" Label="Phone" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
+                <br \ />
+                <MudButton Variant="Variant.Filled" OnClick="Save">Save Customer</MudButton>
+            </MudCardContent>
+        </MudItem>
+    </MudGrid>
+</MudCard>
+
+
+<MudTable Elevation="10" Items="GetAllCustomer()" Filter="new Func<Customer, bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">
+            Customer
+        </MudText>
+        <MudSpacer/>
+        <MudTextField @bind-Value="searchString" Placeholder="Search Customer..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+
+        </MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>id</MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<Customer, object>(x=>x.FirstName)" InitialDirection="SortDirection.Ascending">First Name</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<Customer, object>(x=>x.LastName)">Last Name</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<Customer, object>(x=>x.Phone)">Phone</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+           Action
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="FirstName">@context.FirstName</MudTd>
+        <MudTd DataLabel="LastName">@context.LastName</MudTd>
+        <MudTd DataLabel="Phone">@context.Phone</MudTd>
+        <MudTd>
+            <MudIconButton Color="Color.Primary" @onclick="@(()=>Edit(context.Id))" Variant="Variant.Outlined" Size="Size.Medium" Icon="@Icons.Material.Filled.Edit" aria-label="Edit"/>
+            <MudIconButton Color="Color.Primary" @onclick="@(()=>Delete(context.Id))" Variant="Variant.Outlined" Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" aria-label="Delete" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[]{5,10,20,30}"/>
+    </PagerContent>
+</MudTable>
+<div class="d-flex flex-wrap mt-4">
+    <MudSwitch @bind-Value="@hover" Color="Color.Primary">Hover</MudSwitch>
+    <MudSwitch @bind-Value="@dense" Color="Color.Secondary">Dense</MudSwitch>
+</div>
+
+@code {
+    private bool hover { get; set; } = true;
+    private bool dense { get; set; } = false;
+    private string searchString { get; set; } = String.Empty;
+    private Customer customer = new Customer();
+    private List<Customer> customers = new List<Customer>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GetAllCustomer();
+    }
+
+    private List<Customer> GetAllCustomer()
+    {
+        return customerService.GetCustomers();
+    }
+    
+    
+    private void Edit(int id)
+    {
+        customer = customers.FirstOrDefault(c => c.Id == id);
+    }
+    private void Delete(int id)
+    {
+        customerService.DeleteCustomer(id);
+        snackBar.Add("Customer was deleted", Severity.Success);
+        GetAllCustomer();
+    }
+    private void Save()
+    {
+        customerService.SaveCustomer(customer);
+        customer = new Customer();
+        snackBar.Add("Customer was saved",Severity.Success);
+        GetAllCustomer();
+    }
+
+    private bool Search(Customer customer)
+    {
+        if (customer.FirstName != null && customer.LastName != null && customer.Phone != null &&
+            (customer.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+             customer.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+             customer.Phone.Contains(searchString, StringComparison.OrdinalIgnoreCase)))
+        {
+            return true;
+        }
+        return false;
+    }
+
+}
