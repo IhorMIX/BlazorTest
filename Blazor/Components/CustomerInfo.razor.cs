@@ -1,54 +1,50 @@
-﻿namespace Blazor.Components;
+namespace Blazor.Components;
 
 public partial class CustomerInfo
 {
     [Inject] public ICustomerService CustomerService { get; set; }
     [Inject] public ISnackbar SnackBar { get; set; }
-    private bool hover { get; set; } = true;
-    private bool dense { get; set; } = false;
-    private string SearchString { get; set; } = String.Empty;
-    private Customer customer { get; set; } = new();
-    private List<Customer> CustomerList { get; set; }  = new();
+    private bool Hover { get; set; } = true;
+    private bool Dense { get; set; }
+    private string SearchString { get; set; } = string.Empty;
+    private Customer Customer { get; set; } = new();
+    private List<Customer> CustomerList { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        CustomerList = await GetAllCustomer();
+        CustomerList = await GetAllCustomerAsync();
     }
 
-    private async Task<List<Customer>> GetAllCustomer()
+    private async Task<List<Customer>> GetAllCustomerAsync()
     {
-        return await CustomerService.GetCustomers();
+        return await CustomerService.GetCustomersAsync();
     }
 
 
-    private async Task Edit(int id)
+    private void Edit(int id)
     {
-        customer = CustomerList.FirstOrDefault(c => c.Id == id);
+        Customer = CustomerList.FirstOrDefault(c => c.Id == id);
     }
-    private async Task Delete(int id)
+    private async Task DeleteAsync(int id)
     {
-        await CustomerService.DeleteCustomer(id);
+        await CustomerService.DeleteCustomerAsync(id);
         SnackBar.Add("Customer was deleted", Severity.Success);
-        await GetAllCustomer();
+        await GetAllCustomerAsync();
     }
-    private async Task Save()
+    private async Task SaveAsync()
     {
-        await CustomerService.SaveCustomer(customer);
-        customer = new Customer();
+        await CustomerService.SaveCustomerAsync(Customer);
+        Customer = new Customer();
         SnackBar.Add("Customer was saved", Severity.Success);
-        await GetAllCustomer();
+        await GetAllCustomerAsync();
     }
 
     private bool Search(Customer customer)
     {
-        if (customer.FirstName != null && customer.LastName != null && customer.Phone != null &&
+        return customer.FirstName != null && customer.LastName != null && customer.Phone != null &&
             (customer.FirstName.Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
              customer.LastName.Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
-             customer.Phone.Contains(SearchString, StringComparison.OrdinalIgnoreCase)))
-        {
-            return true;
-        }
-        return false;
+             customer.Phone.Contains(SearchString, StringComparison.OrdinalIgnoreCase));
     }
 
 }

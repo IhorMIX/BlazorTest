@@ -2,10 +2,10 @@
 
 public interface ICustomerService
 {
-    public Task<List<Customer>> GetCustomers();
+    public Task<List<Customer>> GetCustomersAsync();
 
-    public Task<Customer> GetCustomerById(int id);
+    public Task<Customer> GetCustomerByIdAsync(int id);
 
-    public Task SaveCustomer(Customer customer);
-    public Task DeleteCustomer(int id);
+    public Task SaveCustomerAsync(Customer customer);
+    public Task DeleteCustomerAsync(int id);
 }

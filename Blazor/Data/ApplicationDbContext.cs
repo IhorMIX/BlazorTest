@@ -1,11 +1,6 @@
-﻿namespace Blazor.Data;
+namespace Blazor.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-
-    }
-
     public DbSet<Customer> Customers { get; set; }
 }
