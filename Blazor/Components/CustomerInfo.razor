@@ -13,21 +13,19 @@
                 <MudTextField @bind-Value="customer.LastName" Label="Last Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
                 <MudTextField @bind-Value="customer.Phone" Label="Phone" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
                 <br \ />
-                <MudButton Variant="Variant.Filled" OnClick="Save">Save Customer</MudButton>
+                <MudButton Variant="Variant.Filled" OnClick="Save" Color="Color.Success">Save Customer</MudButton>
             </MudCardContent>
         </MudItem>
     </MudGrid>
 </MudCard>
 <br/>
-<MudTable Elevation="10" Items="GetAllCustomer()" Filter="new Func<Customer, bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
+<MudTable Elevation="10" Items="CustomerList" T="Customer" Filter="new Func<Customer, bool>(Search)" @bind-customer="customer" Hover="@hover" Dense="@dense">
     <ToolBarContent>
         <MudText Typo="Typo.h6">
             Customer
         </MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Search Customer..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
-
-        </MudTextField>
+        <MudTextField @bind-Value="SearchString" Placeholder="Search Customer..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>id</MudTh>

@@ -8,30 +8,33 @@ public class CustomerSerivce : ICustomerService
     {
         _dbContext = dbContext;
     }
-    public void DeleteCustomer(int id)
+
+    public async Task DeleteCustomer(int id)
     {
-        var customer = _dbContext.Customers.SingleOrDefault(x => x.Id == id);
+        var customer = await _dbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
         if (customer != null) 
         {
             _dbContext.Customers.Remove(customer);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 
-    public Customer GetCustomerById(int id)
+    public async Task<Customer> GetCustomerById(int id)
     {
-        return _dbContext.Customers.SingleOrDefault(c => c.Id == id);
+        return await _dbContext.Customers.SingleOrDefaultAsync(c => c.Id == id);
     }
 
-    public List<Customer> GetCustomers()
+    public async Task<List<Customer>> GetCustomers()
     {
-        return _dbContext.Customers.ToList();
+        return await _dbContext.Customers.ToListAsync();
     }
 
-    public void SaveCustomer(Customer customer)
+    public async Task SaveCustomer(Customer customer)
     {
-        if(customer.Id == 0) _dbContext.Customers.Add(customer);
-        else _dbContext.Customers.Update(customer);
-        _dbContext.SaveChanges();
+        if(customer.Id == 0) 
+            await _dbContext.Customers.AddAsync(customer);
+        else  
+            _dbContext.Customers.Update(customer);
+        await _dbContext.SaveChangesAsync();
     }
 }

@@ -2,49 +2,49 @@
 
 public partial class CustomerInfo
 {
-    [Inject] public ICustomerService customerService { get; set; }
-    [Inject] public ISnackbar snackBar { get; set; }
+    [Inject] public ICustomerService CustomerService { get; set; }
+    [Inject] public ISnackbar SnackBar { get; set; }
     private bool hover { get; set; } = true;
     private bool dense { get; set; } = false;
-    private string searchString { get; set; } = String.Empty;
-    private Customer customer = new Customer();
-    private List<Customer> customers = new List<Customer>();
+    private string SearchString { get; set; } = String.Empty;
+    private Customer customer { get; set; } = new();
+    private List<Customer> CustomerList { get; set; }  = new();
 
     protected override async Task OnInitializedAsync()
     {
-        GetAllCustomer();
+        CustomerList = await GetAllCustomer();
     }
 
-    private List<Customer> GetAllCustomer()
+    private async Task<List<Customer>> GetAllCustomer()
     {
-        return customerService.GetCustomers();
+        return await CustomerService.GetCustomers();
     }
 
 
-    private void Edit(int id)
+    private async Task Edit(int id)
     {
-        customer = customers.FirstOrDefault(c => c.Id == id);
+        customer = CustomerList.FirstOrDefault(c => c.Id == id);
     }
-    private void Delete(int id)
+    private async Task Delete(int id)
     {
-        customerService.DeleteCustomer(id);
-        snackBar.Add("Customer was deleted", Severity.Success);
-        GetAllCustomer();
+        await CustomerService.DeleteCustomer(id);
+        SnackBar.Add("Customer was deleted", Severity.Success);
+        await GetAllCustomer();
     }
-    private void Save()
+    private async Task Save()
     {
-        customerService.SaveCustomer(customer);
+        await CustomerService.SaveCustomer(customer);
         customer = new Customer();
-        snackBar.Add("Customer was saved", Severity.Success);
-        GetAllCustomer();
+        SnackBar.Add("Customer was saved", Severity.Success);
+        await GetAllCustomer();
     }
 
     private bool Search(Customer customer)
     {
         if (customer.FirstName != null && customer.LastName != null && customer.Phone != null &&
-            (customer.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-             customer.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-             customer.Phone.Contains(searchString, StringComparison.OrdinalIgnoreCase)))
+            (customer.FirstName.Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+             customer.LastName.Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+             customer.Phone.Contains(SearchString, StringComparison.OrdinalIgnoreCase)))
         {
             return true;
         }

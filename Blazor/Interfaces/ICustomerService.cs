@@ -2,10 +2,10 @@
 
 public interface ICustomerService
 {
-    List<Customer> GetCustomers();
+    public Task<List<Customer>> GetCustomers();
 
-    Customer GetCustomerById(int id);
+    public Task<Customer> GetCustomerById(int id);
 
-    void SaveCustomer(Customer customer);
-    void DeleteCustomer(int id);
+    public Task SaveCustomer(Customer customer);
+    public Task DeleteCustomer(int id);
 }
