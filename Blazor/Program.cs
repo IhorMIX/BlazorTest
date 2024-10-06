@@ -1,4 +1,4 @@
-using Blazor.Data;
+using Blazor.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
