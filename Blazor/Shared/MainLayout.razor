@@ -1,24 +1,33 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<PageTitle>Blazor</PageTitle>
+
+<MudThemeProvider @bind-IsDarkMode="IsDarkMode" Theme="Theme"/>
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<PageTitle>Blazor</PageTitle>
+<MudLayout>
+    <div class="page">
+        <MudAppBar Elevation="1" Dense="@Dense">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
+            <MudSpacer />
+            <MudIconButton Icon="@Icon" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleTheme" />
+            <MudAvatar Color="Color.Primary">@VisibleLogin</MudAvatar>
+        </MudAppBar>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+        <MudDrawer @bind-Open="@DrawerOpen" Fixed="true" Elevation="2" Variant="@DrawerVariant.Mini" OpenMiniOnHover="false" Overlay="false" ClipMode="ClipMode" Breakpoint="@Breakpoint">
+            <NavMenu/>
+        </MudDrawer>
+
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+                <ErrorBoundary>
+                    @Body
+                </ErrorBoundary>
+            </MudContainer>
+        </MudMainContent>
+
     </div>
+</MudLayout>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
