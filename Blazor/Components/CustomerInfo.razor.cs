@@ -1,3 +1,5 @@
+using Blazor.Components.Dialog;
+
 namespace Blazor.Components;
 
 public partial class CustomerInfo
@@ -21,9 +23,54 @@ public partial class CustomerInfo
     }
 
 
-    private void Edit(int id)
+    private async void EditAsync(Customer customer)
     {
-        Customer = CustomerList.FirstOrDefault(c => c.Id == id);
+        var parameters = new DialogParameters<CustomerDialog>
+        {
+            {"typeDialog", 2},
+            {"Customer", customer}
+        };
+
+        var dialog = await DialogService.ShowAsync<CustomerDialog>(
+            parameters: parameters,
+            new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            });
+
+        var res = await dialog.Result;
+        if (res.Canceled)
+        {
+            return;
+        }
+        await GetAllCustomerAsync();
+    }
+
+    private async void ButtonAddClickAsync()
+    {
+        var parameters = new DialogParameters<CustomerDialog>
+        {
+            {"typeDialog", 1},
+        };
+
+        var dialog = await DialogService.ShowAsync<CustomerDialog>(
+            "Add customer",
+            parameters: parameters,
+            new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            });
+
+        var res = await dialog.Result;
+        if (res.Canceled)
+        {
+            return;
+        }
+        await GetAllCustomerAsync();
     }
     private async Task DeleteAsync(int id)
     {
