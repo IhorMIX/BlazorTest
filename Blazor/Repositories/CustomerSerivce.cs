@@ -1,8 +1,14 @@
-﻿namespace Blazor.Repositories;
+namespace Blazor.Repositories;
 
 public class CustomerSerivce(ApplicationDbContext dbContext) : ICustomerService
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
+
+    public async Task AddCustomerAsync(Customer customer)
+    {
+        await _dbContext.Customers.AddAsync(customer);
+        await _dbContext.SaveChangesAsync();
+    }
 
     public async Task DeleteCustomerAsync(int id)
     {

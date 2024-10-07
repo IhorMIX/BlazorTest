@@ -12,7 +12,7 @@
             </DialogContent>
             <DialogActions>
                 <MudSpacer/>
-                <MudButton Variant="Variant.Filled" OnClick="SaveAsync" Color="Color.Success">@LabelButton</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="@(async () => await ActionButtonAsync(Customer))" Color="Color.Success">@LabelButton</MudButton>
             </DialogActions>
     </MudDialog>
 </MudForm>

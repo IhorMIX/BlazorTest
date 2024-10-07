@@ -1,10 +1,7 @@
 ﻿<MudTable Elevation="10" Items="CustomerList" T="Customer" Filter="new Func<Customer, bool>(Search)" @bind-customer="Customer" Hover="@Hover" Dense="@Dense">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">
-            Customer
-        </MudText>
-        <MudSpacer />
         <MudTextField @bind-Value="SearchString" Placeholder="Search Customer..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+        <MudSpacer/>
         <MudButton Variant="Variant.Filled" DropShadow="false" Color="Color.Success" OnClick="ButtonAddClickAsync">Add</MudButton>
     </ToolBarContent>
     <HeaderContent>
@@ -28,7 +25,7 @@
         <MudTd DataLabel="LastName">@context.LastName</MudTd>
         <MudTd DataLabel="Phone">@context.Phone</MudTd>
         <MudTd>
-            <MudIconButton Color="Color.Primary" @onclick="@(()=>Edit(context.Id))" Variant="Variant.Outlined" Size="Size.Medium" Icon="@Icons.Material.Filled.Edit" aria-label="Edit" />
+            <MudIconButton Color="Color.Primary" @onclick="@(()=>EditAsync(context))" Variant="Variant.Outlined" Size="Size.Medium" Icon="@Icons.Material.Filled.Edit" aria-label="Edit" />
             <MudIconButton Color="Color.Primary" @onclick="@(()=>DeleteAsync(context.Id))" Variant="Variant.Outlined" Size="Size.Medium" Icon="@Icons.Material.Filled.Delete" aria-label="Delete" />
         </MudTd>
     </RowTemplate>
