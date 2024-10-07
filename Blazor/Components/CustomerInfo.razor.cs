@@ -2,7 +2,8 @@ namespace Blazor.Components;
 
 public partial class CustomerInfo
 {
-    [Inject] public ICustomerService CustomerService { get; set; }
+    [Inject] private ICustomerService CustomerService { get; set; }
+    [Inject] private IDialogService DialogService { get; set; }
     [Inject] public ISnackbar SnackBar { get; set; }
     private bool Hover { get; set; } = true;
     private bool Dense { get; set; }
@@ -13,6 +14,7 @@ public partial class CustomerInfo
     protected override async Task OnInitializedAsync()
     {
         CustomerList = await GetAllCustomerAsync();
+        StateHasChanged();
     }
 
     private async Task<List<Customer>> GetAllCustomerAsync()
@@ -21,22 +23,62 @@ public partial class CustomerInfo
     }
 
 
-    private void Edit(int id)
+    private async Task EditAsync(Customer customer)
     {
-        Customer = CustomerList.FirstOrDefault(c => c.Id == id);
+        var parameters = new DialogParameters<CustomerDialog>
+        {
+            {"typeDialog", 2},
+            {"CustomerInput", customer}
+        };
+
+        var dialog = await DialogService.ShowAsync<CustomerDialog>(
+            "Сhange of information about customer",
+            parameters: parameters,
+            new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            });
+
+
+        var res = await dialog.Result;
+        if (res.Canceled)
+        {
+            return;
+        }
+        await OnInitializedAsync();
+    }
+
+    private async Task ButtonAddClickAsync()
+    {
+        var parameters = new DialogParameters<CustomerDialog>
+        {
+            {"typeDialog", 1},
+        };
+
+        var dialog = await DialogService.ShowAsync<CustomerDialog>(
+            "Add customer",
+            parameters: parameters,
+            new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            });
+
+        var res = await dialog.Result;
+        if (res.Canceled)
+        {
+            return;
+        }
+        await OnInitializedAsync();
     }
     private async Task DeleteAsync(int id)
     {
         await CustomerService.DeleteCustomerAsync(id);
         SnackBar.Add("Customer was deleted", Severity.Success);
-        await GetAllCustomerAsync();
-    }
-    private async Task SaveAsync()
-    {
-        await CustomerService.SaveCustomerAsync(Customer);
-        Customer = new Customer();
-        SnackBar.Add("Customer was saved", Severity.Success);
-        await GetAllCustomerAsync();
+        await OnInitializedAsync();
     }
 
     private bool Search(Customer customer)

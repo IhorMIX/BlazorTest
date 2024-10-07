@@ -1,4 +1,4 @@
-﻿namespace Blazor.Interfaces;
+namespace Blazor.Interfaces;
 
 public interface ICustomerService
 {
@@ -8,4 +8,5 @@ public interface ICustomerService
 
     public Task SaveCustomerAsync(Customer customer);
     public Task DeleteCustomerAsync(int id);
+    public Task AddCustomerAsync(Customer customer);
 }

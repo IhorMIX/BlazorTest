@@ -1,9 +1,7 @@
-﻿global using Blazor.Data;
+global using Blazor.Data;
 global using MudBlazor;
-global using System.Net.NetworkInformation;
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.EntityFrameworkCore;
-global using System.ComponentModel.DataAnnotations;
 global using Blazor.Interfaces;
 global using Blazor.Repositories;
-global using Blazor.Shared;
+global using Blazor.Components.Dialog;
