@@ -23,26 +23,27 @@ public partial class CustomerDialog
 
     private async Task ActionButtonAsync(Customer customer)
     {
-        if (TypeDialog == 1)
+        var result = TypeDialog == 1 ? await CustomerAddAsync(customer) : await CustomerEditAsync(customer);
+
+        if (!result.Success)
         {
-            await CustomerAddAsync(customer);
+            Snackbar.Add($"Ошибка: {result.Message}", Severity.Error);
+            return;
         }
-        else
-        {
-            await CustomerEditAsync(customer);
-        }
+
+        Snackbar.Add(TypeDialog == 1 ? "The client has been successfully added" : "Changes have been successfully applied.", Severity.Success);
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    private async Task CustomerAddAsync(Customer customer)
+    private async Task<OperationResult<bool>> CustomerAddAsync(Customer customer)
     {
-        await CustomerService.SaveCustomerAsync(customer);
-        Snackbar.Add("Change of info about customer", Severity.Success);
+        var result = await CustomerService.AddCustomerAsync(customer);
+        return result;
     }
 
-    private async Task CustomerEditAsync(Customer customer)
+    private async Task<OperationResult<bool>> CustomerEditAsync(Customer customer)
     {
-        await CustomerService.SaveCustomerAsync(customer);
-        Snackbar.Add("Change of info about customer", Severity.Success);
+        var result = await CustomerService.EditCustomerAsync(customer);
+        return result;
     }
 }

@@ -13,11 +13,17 @@ public partial class CustomerInfo
 
     protected override async Task OnInitializedAsync()
     {
-        CustomerList = await GetAllCustomerAsync();
+        var result = await GetAllCustomerAsync();
+        if (!result.Success)
+        {
+            SnackBar.Add($"Exception about receiving data: {result.Message}", Severity.Error);
+            return;
+        }
+        CustomerList = result.Data;
         StateHasChanged();
     }
 
-    private async Task<List<Customer>> GetAllCustomerAsync()
+    private async Task<OperationResult<List<Customer>>> GetAllCustomerAsync()
     {
         return await CustomerService.GetCustomersAsync();
     }
