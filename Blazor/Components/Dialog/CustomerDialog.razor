@@ -1,18 +1,19 @@
-﻿<MudForm>
+﻿<MudForm @ref="_form" Model="Customer" @bind-IsValid="_isValid">
     <MudDialog>
         <TitleContent>
             <MudText Typo="Typo.h6">
                 @(TypeDialog == 1 ? "Add customer" : "Edit customer")
             </MudText>
-        </TitleContent>        
-            <DialogContent>
-                <MudTextField @bind-Value="Customer.FirstName" Label="First Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
-                <MudTextField @bind-Value="Customer.LastName" Label="Last Name" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField>
-                <MudTextField @bind-Value="Customer.Phone" Label="Phone" Variant="Variant.Filled" Margin="Margin.Normal"></MudTextField> 
-            </DialogContent>
-            <DialogActions>
-                <MudSpacer/>
-            <MudButton Variant="Variant.Filled" OnClick="@(async () => await ActionButtonAsync(Customer))" Color="Color.Success">@LabelButton</MudButton>
-            </DialogActions>
+        </TitleContent>
+        <DialogContent>
+            <MudTextField @bind-Value="Customer.FirstName" Label="First Name" Variant="Variant.Filled" Margin="Margin.Normal" Required="true" For="@(() => Customer.FirstName)" />
+            <MudTextField @bind-Value="Customer.LastName" Label="Last Name" Variant="Variant.Filled" Margin="Margin.Normal" Required="true" For="@(() => Customer.LastName)" />
+            <MudTextField @bind-Value="Customer.Phone" Label="Phone" Variant="Variant.Filled" Margin="Margin.Normal" Required="true" For="@(() => Customer.Phone)" />
+        </DialogContent>
+        <DialogActions>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" OnClick="HandleSubmitAsync" Color="Color.Success">@LabelButton</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="MudDialog.Cancel">Cancel</MudButton>
+        </DialogActions>
     </MudDialog>
 </MudForm>

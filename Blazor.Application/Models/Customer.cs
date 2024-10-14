@@ -1,5 +1,3 @@
-using Blazor.Application.Validations;
-
 namespace Blazor.Data;
 public class Customer
 {
@@ -11,6 +9,7 @@ public class Customer
     public string FirstName { get; set; }
     [MaxLength(50)]
     public string LastName { get; set; }
-    [ValidPhone]
+
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
     public string Phone { get; set; }
 }
